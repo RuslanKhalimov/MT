@@ -8,7 +8,11 @@ public class SyntaxAnalizer {
     public Node parse(String expression) throws ParseException {
         lexicalAnalyzer = new LexicalAnalyzer(new ByteArrayInputStream(expression.getBytes(Charset.forName("UTF-8"))));
         lexicalAnalyzer.nextToken();
-        return E();
+        Node res = E();
+        if (lexicalAnalyzer.getCurToken() != Token.END) {
+            throw new ParseException("unexpected suffix : " + expression.substring(lexicalAnalyzer.getCurPos()), lexicalAnalyzer.getCurPos());
+        }
+        return res;
     }
 
     private Node E() throws ParseException {
@@ -18,7 +22,7 @@ public class SyntaxAnalizer {
             case VAR:
             case LPAREN:
                 res.children.add(X());
-                res.children.add(O());
+                res.children.add(EPrime());
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -33,7 +37,7 @@ public class SyntaxAnalizer {
             case VAR:
             case LPAREN:
                 res.children.add(C());
-                res.children.add(B());
+                res.children.add(XPrime());
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -47,26 +51,8 @@ public class SyntaxAnalizer {
             case NOT:
             case VAR:
             case LPAREN:
-                res.children.add(N());
-                res.children.add(A());
-                break;
-            default:
-                throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
-        }
-        return res;
-    }
-
-    private Node N() throws ParseException {
-        Node res = new Node("N");
-        switch (lexicalAnalyzer.getCurToken()) {
-            case NOT:
-                res.children.add(new Node("!"));
-                lexicalAnalyzer.nextToken();
-                res.children.add(N());
-                break;
-            case VAR:
-            case LPAREN:
                 res.children.add(T());
+                res.children.add(CPrime());
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -77,8 +63,10 @@ public class SyntaxAnalizer {
     private Node T() throws ParseException {
         Node res = new Node("T");
         switch (lexicalAnalyzer.getCurToken()) {
-            case VAR:
-                res.children.add(V());
+            case NOT:
+                res.children.add(new Node("!"));
+                lexicalAnalyzer.nextToken();
+                res.children.add(T());
                 break;
             case LPAREN:
                 res.children.add(new Node("("));
@@ -90,69 +78,9 @@ public class SyntaxAnalizer {
                 res.children.add(new Node(")"));
                 lexicalAnalyzer.nextToken();
                 break;
-            default:
-                throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
-        }
-        return res;
-    }
-
-    private Node V() throws ParseException {
-        Node res = new Node("V");
-        switch (lexicalAnalyzer.getCurToken()) {
             case VAR:
                 res.children.add(new Node(String.valueOf(lexicalAnalyzer.getCurChar())));
                 lexicalAnalyzer.nextToken();
-                break;
-            default:
-                throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
-        }
-        return res;
-    }
-
-    private Node O() throws ParseException {
-        Node res = new Node("O");
-        switch (lexicalAnalyzer.getCurToken()) {
-            case OR:
-                res.children.add(EPrime());
-                break;
-            case RPAREN:
-            case END:
-                // eps;
-                break;
-            default:
-                throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
-        }
-        return res;
-    }
-
-    private Node B() throws ParseException {
-        Node res = new Node("B");
-        switch (lexicalAnalyzer.getCurToken()) {
-            case XOR:
-                res.children.add(XPrime());
-                break;
-            case OR:
-            case RPAREN:
-            case END:
-                // eps
-                break;
-            default:
-                throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
-        }
-        return res;
-    }
-
-    private Node A() throws ParseException {
-        Node res = new Node("A");
-        switch (lexicalAnalyzer.getCurToken()) {
-            case AND:
-                res.children.add(CPrime());
-                break;
-            case XOR:
-            case OR:
-            case RPAREN:
-            case END:
-                // eps
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -167,7 +95,10 @@ public class SyntaxAnalizer {
                 res.children.add(new Node("|"));
                 lexicalAnalyzer.nextToken();
                 res.children.add(X());
-                res.children.add(O());
+                res.children.add(EPrime());
+                break;
+            case RPAREN:
+            case END:
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -182,7 +113,11 @@ public class SyntaxAnalizer {
                 res.children.add(new Node("^"));
                 lexicalAnalyzer.nextToken();
                 res.children.add(C());
-                res.children.add(B());
+                res.children.add(XPrime());
+                break;
+            case RPAREN:
+            case OR:
+            case END:
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
@@ -196,8 +131,13 @@ public class SyntaxAnalizer {
             case AND:
                 res.children.add(new Node("&"));
                 lexicalAnalyzer.nextToken();
-                res.children.add(N());
-                res.children.add(A());
+                res.children.add(T());
+                res.children.add(CPrime());
+                break;
+            case RPAREN:
+            case OR:
+            case XOR:
+            case END:
                 break;
             default:
                 throw new ParseException("unexpected char : " + lexicalAnalyzer.getCurChar(), lexicalAnalyzer.getCurPos());
