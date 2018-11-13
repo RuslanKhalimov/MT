@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.text.ParseException;
-import java.util.Random;
 
 public class ParserTest {
     private String deleteSpaces(String s) {
@@ -26,6 +26,18 @@ public class ParserTest {
         }
         Assertions.assertFalse(shouldFail);
         Assertions.assertEquals(deleteSpaces(expression), result);
+    }
+
+    @Test
+    void sampleTestWithVisualization() {
+        SyntaxAnalizer syntaxAnalizer = new SyntaxAnalizer();
+        Node tree;
+        try {
+            tree = syntaxAnalizer.parse("!(!a|b&(c|d))^e|!f^a");
+            GraphvizUtils.visualizeTree(tree, "example");
+        } catch (ParseException | InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -75,14 +87,26 @@ public class ParserTest {
 
     @Test
     void testIncorrectInput() {
+        test("a || b & c", true);
+        test("!!x & a | (b & c", true);
+        test("b)))", true);
+        test("!!x & a | b)))", true);
+        test("!!x & () | b", true);
+        test("x !& a", true);
+        test("x ! a", true);
+        test("x () c", true);
+        test("x &", true);
+        test("x |", true);
+        test("x ^", true);
+        test("& x", true);
         test("|a", true);
+        test("d | (d) | (e & a ^ a | (c) ^ (!a) | c) | b) | (!e) ^ (!a ^ (c))", true);
     }
 
     @Test
     void testIllegalCharacter() {
         test("a+b", true);
         test("a|b'", true);
-        test("a-b", true);
         test("[a&b]", true);
     }
 
@@ -93,25 +117,11 @@ public class ParserTest {
 
     @Test
     void randomTests() {
-        for (int i = 0; i < 1000; i++) {
-            System.err.println("random test " + (i + 1));
-            test(generateRandomExpression(10), false);
+        for (int i = 0; i < 10000; i++) {
+            TestGenerator generator = new TestGenerator(127 * i);
+            String expr = generator.getExpression();
+//            System.out.println(expr);
+            test(expr, false);
         }
-    }
-
-    private Random random = new Random();
-    private String[] operations = {"^", "|", "&", "!"};
-
-    private String generateRandomExpression(int depth) {
-        if (depth == 0) {
-            return String.valueOf((char)('a' + Math.abs(random.nextInt()) % 26));
-        }
-        String op = operations[Math.abs(random.nextInt()) % 4];
-        if (op.equals("!")) {
-            return "!(" + generateRandomExpression(depth - 1) + ")";
-        }
-        String left = generateRandomExpression(depth - 1);
-        String right = generateRandomExpression(depth - 1);
-        return "(" + left + op + right + ")";
     }
 }

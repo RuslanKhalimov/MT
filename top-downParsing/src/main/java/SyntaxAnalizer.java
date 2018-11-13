@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 
@@ -6,11 +7,14 @@ public class SyntaxAnalizer {
     private LexicalAnalyzer lexicalAnalyzer;
 
     public Node parse(String expression) throws ParseException {
-        lexicalAnalyzer = new LexicalAnalyzer(new ByteArrayInputStream(expression.getBytes(Charset.forName("UTF-8"))));
-        lexicalAnalyzer.nextToken();
+        return parse(new ByteArrayInputStream(expression.getBytes(Charset.forName("UTF-8"))));
+    }
+
+    public Node parse(InputStream inputStream) throws ParseException {
+        lexicalAnalyzer = new LexicalAnalyzer(inputStream);
         Node res = E();
         if (lexicalAnalyzer.getCurToken() != Token.END) {
-            throw new ParseException("unexpected suffix : " + expression.substring(lexicalAnalyzer.getCurPos()), lexicalAnalyzer.getCurPos());
+            throw new ParseException("unexpected suffix since index : ", lexicalAnalyzer.getCurPos());
         }
         return res;
     }
@@ -79,7 +83,7 @@ public class SyntaxAnalizer {
                 lexicalAnalyzer.nextToken();
                 break;
             case VAR:
-                res.children.add(new Node(String.valueOf(lexicalAnalyzer.getCurChar())));
+                res.children.add(new Node(Character.toString(lexicalAnalyzer.getCurChar())));
                 lexicalAnalyzer.nextToken();
                 break;
             default:

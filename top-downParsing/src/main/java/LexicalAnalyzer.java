@@ -1,5 +1,7 @@
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 
 public class LexicalAnalyzer {
@@ -8,9 +10,14 @@ public class LexicalAnalyzer {
     private int curChar;
     private Token curToken;
 
-    public LexicalAnalyzer(InputStream inputStream) {
+    public LexicalAnalyzer(InputStream inputStream) throws ParseException {
         this.inputStream = inputStream;
         curPos = 0;
+        nextToken();
+    }
+
+    public LexicalAnalyzer(String inputString) throws ParseException {
+        this(new ByteArrayInputStream(inputString.getBytes(Charset.forName("UTF-8"))));
     }
 
     private void nextChar() throws ParseException {
