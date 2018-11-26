@@ -1,11 +1,11 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.text.ParseException;
 
 public class LexerTest {
     @Test
-    void testCorrectInput() {
+    public void testCorrectInput() {
         StringBuilder testString = new StringBuilder("|^&!()");
         for (char c = 'a'; c <= 'z'; c++) {
             testString.append(c);
@@ -18,7 +18,7 @@ public class LexerTest {
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            Assertions.fail("shouldn't fail");
+            Assert.fail("shouldn't fail");
         }
     }
 }

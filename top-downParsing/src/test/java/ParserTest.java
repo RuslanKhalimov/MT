@@ -1,5 +1,5 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.Assert;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -21,15 +21,15 @@ public class ParserTest {
         try {
             result = syntaxAnalizer.parse(expression).toString();
         } catch (ParseException e) {
-            Assertions.assertTrue(shouldFail);
+            Assert.assertTrue(shouldFail);
             return;
         }
-        Assertions.assertFalse(shouldFail);
-        Assertions.assertEquals(deleteSpaces(expression), result);
+        Assert.assertFalse(shouldFail);
+        Assert.assertEquals(deleteSpaces(expression), result);
     }
 
     @Test
-    void sampleTestWithVisualization() {
+    public void sampleTestWithVisualization() {
         SyntaxAnalizer syntaxAnalizer = new SyntaxAnalizer();
         Node tree;
         try {
@@ -41,28 +41,28 @@ public class ParserTest {
     }
 
     @Test
-    void testVariable() {
+    public void testVariable() {
         test("a", false);
         test("d", false);
         test("(((x)))", false);
     }
 
     @Test
-    void testNegation() {
+    public void testNegation() {
         test("!a", false);
         test("!!!!a", false);
         test("!((!!(!a)))", false);
     }
 
     @Test
-    void testConjunction() {
+    public void testConjunction() {
         test("a&a", false);
         test("a&b&c&d", false);
         test("(a&b)&(c&(d&e))", false);
     }
 
     @Test
-    void testXor() {
+    public void testXor() {
         test("a^a", false);
         test("a^b^c^d", false);
         test("a^b&c^d&e", false);
@@ -70,7 +70,7 @@ public class ParserTest {
     }
 
     @Test
-    void testDisjunction() {
+    public void testDisjunction() {
         test("a|a", false);
         test("a|b|c|d", false);
         test("a|b&c|d&e", false);
@@ -78,7 +78,7 @@ public class ParserTest {
     }
 
     @Test
-    void testWithSpaces() {
+    public void testWithSpaces() {
         test("a | b", false);
         test("    a", false);
         test("b   ", false);
@@ -86,7 +86,7 @@ public class ParserTest {
     }
 
     @Test
-    void testIncorrectInput() {
+    public void testIncorrectInput() {
         test("a || b & c", true);
         test("!!x & a | (b & c", true);
         test("b)))", true);
@@ -104,19 +104,19 @@ public class ParserTest {
     }
 
     @Test
-    void testIllegalCharacter() {
+    public void testIllegalCharacter() {
         test("a+b", true);
         test("a|b'", true);
         test("[a&b]", true);
     }
 
     @Test
-    void testEmptyInput() {
+    public void testEmptyInput() {
         test("", true);
     }
 
     @Test
-    void randomTests() {
+    public void randomTests() {
         for (int i = 0; i < 10000; i++) {
             TestGenerator generator = new TestGenerator(127 * i);
             String expr = generator.getExpression();
