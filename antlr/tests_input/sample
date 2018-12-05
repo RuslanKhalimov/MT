@@ -1,0 +1,6 @@
+x, y = readint(), readint()
+if x > y {
+    print(x)
+} else {
+    print(y)
+}

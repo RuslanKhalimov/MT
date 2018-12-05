@@ -1,0 +1,5 @@
+a = readint()
+b, c = readint(), readint()
+d = 2*readint()
+e, f = c + 2*readint() - readint(), readint()
+print(a, b, c, d, e, f)

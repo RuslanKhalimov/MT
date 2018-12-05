@@ -1,0 +1,6 @@
+x = 2
+y = 5
+z = y
+x = z
+a, b, c = z, x, y
+a, b = b, a

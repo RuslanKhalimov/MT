@@ -1,0 +1,16 @@
+x, y, z = 1, 2, 3
+if x + y != z {
+    print(x)
+} else {
+    print(y)
+    c = x + z
+    print(c)
+    if c > 10 {
+        if z > x {
+            print(z)
+        }
+    } else {
+        print(2)
+    }
+}
+c = 2

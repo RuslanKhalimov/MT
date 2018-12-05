@@ -1,0 +1,16 @@
+if 1 < 2 {
+    print(3)
+}
+if 3 == 3 {
+    print(1)
+    x = 2
+    print(x)
+}
+y = 2
+if y + 3 <= 5 && !(y > -2 || y != 0) {
+    a = 2
+    if y == 2 {
+        print(y)
+    }
+}
+a = 3
