@@ -30,25 +30,25 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterChoose_roole(GrammarParser.Choose_rooleContext ctx) { }
+	@Override public void enterChoose_rule(GrammarParser.Choose_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitChoose_roole(GrammarParser.Choose_rooleContext ctx) { }
+	@Override public void exitChoose_rule(GrammarParser.Choose_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMy_rule(GrammarParser.My_ruleContext ctx) { }
+	@Override public void enterNon_term_rule(GrammarParser.Non_term_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMy_rule(GrammarParser.My_ruleContext ctx) { }
+	@Override public void exitNon_term_rule(GrammarParser.Non_term_ruleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -66,13 +66,13 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMy_returns(GrammarParser.My_returnsContext ctx) { }
+	@Override public void enterNon_term_returns(GrammarParser.Non_term_returnsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMy_returns(GrammarParser.My_returnsContext ctx) { }
+	@Override public void exitNon_term_returns(GrammarParser.Non_term_returnsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -90,13 +90,13 @@ public class GrammarBaseListener implements GrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterType(GrammarParser.TypeContext ctx) { }
+	@Override public void enterVar_or_type(GrammarParser.Var_or_typeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(GrammarParser.TypeContext ctx) { }
+	@Override public void exitVar_or_type(GrammarParser.Var_or_typeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

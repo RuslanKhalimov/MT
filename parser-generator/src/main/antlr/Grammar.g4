@@ -6,19 +6,19 @@ import grammar.*;
 
 start returns [Grammar v]
         : NTERM              { $v = new Grammar($NTERM.text); }
-          (choose_roole[$v] ';')+
+          (choose_rule[$v] ';')+
         ;
 
-choose_roole[Grammar gr]
+choose_rule[Grammar gr]
         : TERM '=' STRING    { $gr.addTermRule(new TermRule(false, $TERM.text, $STRING.text)); }
         | TERM ':' STRING    { $gr.addTermRule(new TermRule(true, $TERM.text, $STRING.text)); }
-        | my_rule              { $gr.addNonTermRule($my_rule.v); }
+        | non_term_rule            { $gr.addNonTermRule($non_term_rule.v); }
         ;
 
-my_rule returns [NonTermRule v]
-        : NTERM args my_returns '=' { $v = new NonTermRule($NTERM.text, $args.v, $my_returns.v); }
-          rightPart               { $v.addRule($rightPart.v); }
-          ('|' rightPart          { $v.addRule($rightPart.v); })*
+non_term_rule returns [NonTermRule v]
+        : NTERM args non_term_returns '=' { $v = new NonTermRule($NTERM.text, $args.v, $non_term_returns.v); }
+          rightPart                 { $v.addRule($rightPart.v); }
+          ('|' rightPart            { $v.addRule($rightPart.v); })*
         ;
 
 args returns [List<Argument> v]
@@ -29,7 +29,7 @@ args returns [List<Argument> v]
         |                   { $v = new ArrayList<>(); }
         ;
 
-my_returns returns [List<Argument> v]
+non_term_returns returns [List<Argument> v]
         : '[returns' arg    { $v = new ArrayList<>(); }
                             { $v.add($arg.v); }
           (',' arg          { $v.add($arg.v); })*
@@ -38,17 +38,17 @@ my_returns returns [List<Argument> v]
         ;
 
 arg returns [Argument v]
-        : NTERM ':' type    { $v = new Argument($NTERM.text, $type.v); }
+        : l = var_or_type ':' r = var_or_type    { $v = new Argument($l.v, $r.v); }
         ;
 
-type returns [String v]
-        : NTERM { $v = $NTERM.text; }
-        | TERM  { $v = $TERM.text; }
+var_or_type returns [String v]
+        : TERM          { $v = $TERM.text; }
+        | NTERM         { $v = $NTERM.text; }
         ;
 
 rightPart returns [List<RuleToken> v]
         :               { $v = new ArrayList<>(); }
-        (ruleToken        { $v.add($ruleToken.v); })+
+        (ruleToken      { $v.add($ruleToken.v); })+
         ;
 
 ruleToken returns [RuleToken v]
@@ -61,9 +61,8 @@ ruleToken returns [RuleToken v]
         ;
 
 param returns [String v]
-        : NTERM { $v = $NTERM.text; }
-        | TERM  { $v = $TERM.text; }
-        | CODE  { $v = $CODE.text.substring(1, $CODE.text.length() - 1); }
+        : CODE  { $v = $CODE.text.substring(1, $CODE.text.length() - 1); }
+        | var_or_type   { $v = $var_or_type.v; }
         ;
 
 TERM   : [A-Z][a-zA-Z0-9_]*;

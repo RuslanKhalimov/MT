@@ -20,25 +20,25 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitStart(GrammarParser.StartContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#choose_roole}.
+	 * Enter a parse tree produced by {@link GrammarParser#choose_rule}.
 	 * @param ctx the parse tree
 	 */
-	void enterChoose_roole(GrammarParser.Choose_rooleContext ctx);
+	void enterChoose_rule(GrammarParser.Choose_ruleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#choose_roole}.
+	 * Exit a parse tree produced by {@link GrammarParser#choose_rule}.
 	 * @param ctx the parse tree
 	 */
-	void exitChoose_roole(GrammarParser.Choose_rooleContext ctx);
+	void exitChoose_rule(GrammarParser.Choose_ruleContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#my_rule}.
+	 * Enter a parse tree produced by {@link GrammarParser#non_term_rule}.
 	 * @param ctx the parse tree
 	 */
-	void enterMy_rule(GrammarParser.My_ruleContext ctx);
+	void enterNon_term_rule(GrammarParser.Non_term_ruleContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#my_rule}.
+	 * Exit a parse tree produced by {@link GrammarParser#non_term_rule}.
 	 * @param ctx the parse tree
 	 */
-	void exitMy_rule(GrammarParser.My_ruleContext ctx);
+	void exitNon_term_rule(GrammarParser.Non_term_ruleContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#args}.
 	 * @param ctx the parse tree
@@ -50,15 +50,15 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitArgs(GrammarParser.ArgsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#my_returns}.
+	 * Enter a parse tree produced by {@link GrammarParser#non_term_returns}.
 	 * @param ctx the parse tree
 	 */
-	void enterMy_returns(GrammarParser.My_returnsContext ctx);
+	void enterNon_term_returns(GrammarParser.Non_term_returnsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#my_returns}.
+	 * Exit a parse tree produced by {@link GrammarParser#non_term_returns}.
 	 * @param ctx the parse tree
 	 */
-	void exitMy_returns(GrammarParser.My_returnsContext ctx);
+	void exitNon_term_returns(GrammarParser.Non_term_returnsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#arg}.
 	 * @param ctx the parse tree
@@ -70,15 +70,15 @@ public interface GrammarListener extends ParseTreeListener {
 	 */
 	void exitArg(GrammarParser.ArgContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GrammarParser#type}.
+	 * Enter a parse tree produced by {@link GrammarParser#var_or_type}.
 	 * @param ctx the parse tree
 	 */
-	void enterType(GrammarParser.TypeContext ctx);
+	void enterVar_or_type(GrammarParser.Var_or_typeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GrammarParser#type}.
+	 * Exit a parse tree produced by {@link GrammarParser#var_or_type}.
 	 * @param ctx the parse tree
 	 */
-	void exitType(GrammarParser.TypeContext ctx);
+	void exitVar_or_type(GrammarParser.Var_or_typeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GrammarParser#rightPart}.
 	 * @param ctx the parse tree
