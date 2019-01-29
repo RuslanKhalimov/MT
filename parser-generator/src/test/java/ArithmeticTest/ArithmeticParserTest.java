@@ -14,7 +14,8 @@ public class ArithmeticParserTest {
             AddSub result = parser.parse(input);
             System.out.println(input + " = " + result.v);
         } catch (ParseException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
+            e.printStackTrace();
             Assert.assertTrue(shouldFail);
             return;
         }
@@ -52,6 +53,18 @@ public class ArithmeticParserTest {
         test("(2 - 3", true);
         test("()", true);
         test("2+", true);
+    }
+
+    @Test
+    public void testPow() {
+        test("2 ^ 3", false);
+        test("(2 + 2)^(2*2)", false);
+        test("2 ^ 3 ^ 2", false);
+        test("2 ^ 3 ^ 3", false);
+        test("2 ^ 3 * 3 ^ 2", false);
+        test("1 -2 -3", false);
+
+
     }
 
     @Test

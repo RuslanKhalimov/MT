@@ -24,7 +24,6 @@ public class ArithmeticParser {
                 MulDiv mulDiv = mulDiv();
                 AddSub_ addSub_ = addSub_(mulDiv.v);
                 result.v = addSub_.v;
-                result.isZero = result.v == 0;
                 break;
             }
             default:
@@ -72,8 +71,8 @@ public class ArithmeticParser {
             case OP:
             case NUM:
             {
-                Unary unary = unary();
-                MulDiv_ mulDiv_ = mulDiv_(unary.v);
+                Pow pow = pow();
+                MulDiv_ mulDiv_ = mulDiv_(pow.v);
                 result.v = mulDiv_.v;
                 break;
             }
@@ -89,21 +88,64 @@ public class ArithmeticParser {
             case MUL:
             {
                 String MUL = check(ArithmeticToken.MUL);
-                Unary unary = unary();
-                MulDiv_ mulDiv_ = mulDiv_(left * unary.v);
+                Pow pow = pow();
+                MulDiv_ mulDiv_ = mulDiv_(left * pow.v);
                 result.v = mulDiv_.v;
                 break;
             }
             case DIV:
             {
                 String DIV = check(ArithmeticToken.DIV);
-                Unary unary = unary();
-                MulDiv_ mulDiv_ = mulDiv_(left / unary.v);
+                Pow pow = pow();
+                MulDiv_ mulDiv_ = mulDiv_(left / pow.v);
                 result.v = mulDiv_.v;
                 break;
             }
             case ADD:
             case SUB:
+            case END:
+            case CP:
+            {
+                result.v = left;
+                break;
+            }
+            default:
+                throw new ParseException("Unexpected token : " + lexer.getCurToken(), lexer.getCurPos());
+        }
+        return result;
+    }
+
+    private Pow pow() throws ParseException {
+        Pow result = new Pow();
+        switch(lexer.getCurToken()) {
+            case OP:
+            case NUM:
+            {
+                Unary unary = unary();
+                Pow_ pow_ = pow_(unary.v);
+                result.v = pow_.v;
+                break;
+            }
+            default:
+                throw new ParseException("Unexpected token : " + lexer.getCurToken(), lexer.getCurPos());
+        }
+        return result;
+    }
+
+    private Pow_ pow_(int left) throws ParseException {
+        Pow_ result = new Pow_();
+        switch(lexer.getCurToken()) {
+            case POW:
+            {
+                String POW = check(ArithmeticToken.POW);
+                Pow pow = pow();
+                result.v = (int) Math.pow(left, pow.v);
+                break;
+            }
+            case DIV:
+            case ADD:
+            case SUB:
+            case MUL:
             case END:
             case CP:
             {
@@ -150,7 +192,6 @@ public class ArithmeticParser {
 
     public class AddSub {
         public int v;
-        public boolean isZero;
     }
 
     public class AddSub_ {
@@ -162,6 +203,14 @@ public class ArithmeticParser {
     }
 
     public class MulDiv_ {
+        public int v;
+    }
+
+    public class Pow {
+        public int v;
+    }
+
+    public class Pow_ {
         public int v;
     }
 

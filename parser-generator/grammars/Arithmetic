@@ -1,9 +1,8 @@
 addSub
 
-addSub [returns v : int, isZero : boolean]
+addSub [returns v : int]
             = mulDiv addSub_({mulDiv.v})
               {$v = addSub_.v;}
-              {$isZero = $v == 0;}
             ;
 
 addSub_(left : int) [returns v : int]
@@ -14,11 +13,22 @@ addSub_(left : int) [returns v : int]
             | {$v = left;}
             ;
 
-mulDiv [returns v : int] = unary mulDiv_({unary.v}) {$v = mulDiv_.v;};
+mulDiv [returns v : int]
+            = pow mulDiv_({pow.v}) {$v = mulDiv_.v;}
+            ;
 
 mulDiv_(left : int) [returns v : int]
-            = MUL unary mulDiv_({left * unary.v}) {$v = mulDiv_.v;}
-            | DIV unary mulDiv_({left / unary.v}) {$v = mulDiv_.v;}
+            = MUL pow mulDiv_({left * pow.v}) {$v = mulDiv_.v;}
+            | DIV pow mulDiv_({left / pow.v}) {$v = mulDiv_.v;}
+            | {$v = left;}
+            ;
+
+pow [returns v : int]
+            = unary pow_({unary.v}) {$v = pow_.v;}
+            ;
+
+pow_(left : int) [returns v : int]
+            = POW pow {$v = (int) Math.pow(left, pow.v);}
             | {$v = left;}
             ;
 
