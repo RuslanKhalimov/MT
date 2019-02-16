@@ -49,7 +49,6 @@ public class ArithmeticParserTest {
     public void testIncorrect() {
         test("2++2", true);
         test("-2", true);
-        test("2^3", true);
         test("(2 - 3", true);
         test("()", true);
         test("2+", true);

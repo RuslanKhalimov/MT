@@ -79,12 +79,8 @@ public class Grammar {
         while (changed) {
             changed = false;
             for (NonTermRule nonTermRule : nonTermRules) {
-                int oldSize = firstSet.get(nonTermRule.getName()).size();
                 for (List<RuleToken> rightPart : nonTermRule.getRightParts()) {
-                    firstSet.get(nonTermRule.getName()).addAll(getFirstSetByRightPart(rightPart));
-                }
-                if (oldSize < firstSet.get(nonTermRule.getName()).size()) {
-                    changed = true;
+                    changed |= firstSet.get(nonTermRule.getName()).addAll(getFirstSetByRightPart(rightPart));
                 }
             }
         }
@@ -103,30 +99,12 @@ public class Grammar {
                         if (A instanceof Term || A instanceof Code) {
                             continue;
                         }
-                        int oldSize = followSet.get(A.getName()).size();
 
-                        int j = i + 1;
-                        for (; j < rightPart.size(); j++) {
-                            RuleToken B = rightPart.get(j);
-                            if (B instanceof Code) continue;
-
-                            if (B instanceof Term) {
-                                followSet.get(A.getName()).add(B.getName());
-                            } else {
-                                followSet.get(A.getName()).addAll(firstSet.get(B.getName()));
-                                if (firstSet.get(B.getName()).contains(EPS)) {
-                                    followSet.get(A.getName()).remove(EPS);
-                                    continue;
-                                }
-                            }
-                            break;
+                        Set<String> addToFollow = getFirstSetByRightPart(rightPart.subList(i + 1, rightPart.size()));
+                        if (addToFollow.remove(EPS)) {
+                            addToFollow.addAll(followSet.get(nonTermRule.getName()));
                         }
-                        if (j == rightPart.size()) {
-                            followSet.get(A.getName()).addAll(followSet.get(nonTermRule.getName()));
-                        }
-                        if (followSet.get(A.getName()).size() > oldSize) {
-                            changed = true;
-                        }
+                        changed |= followSet.get(A.getName()).addAll(addToFollow);
                     }
                 }
             }
